@@ -1737,35 +1737,37 @@ public class MainWindow extends JFrame
 	public void displaySeasonChangeGif() {
 	    String gifName = null;
 
-	    if (engine.changingToSpring && springPlayed == false) {
+	    if (engine.changingToSpring && springPlayed == false) {  //spring animation
 	        gifName = "SPRING.gif";
 	        springPlayed = true;
-	        winterPlayed = false;
+	        winterPlayed = false;    //make the animation play only once
 	    }
-	    if (engine.changingToSummer && summerPlayed == false) {
+	    if (engine.changingToSummer && summerPlayed == false) {  //summer animation
 	        gifName = "SUMMER.gif";
 	        summerPlayed = true;
 	        springPlayed = false;
 	    }
-	    if (engine.changingToFall && fallPlayed == false) {
+	    if (engine.changingToFall && fallPlayed == false) {  //fall animation
 	        gifName = "FALL.gif";
 	        fallPlayed = true;
 	        summerPlayed = false;
 	    }
-	    if (engine.changingToWinter && winterPlayed == false) {
+	    if (engine.changingToWinter && winterPlayed == false) {  //winter animation
 	        gifName = "WINTER.gif";
 	        winterPlayed = true;
 	        fallPlayed = false;
 	    }
+	    
 	    URL gifURL = getClass().getResource("/" + gifName);
 	    
 	    if (gifURL == null) {
 	        System.err.println("Could not find GIF: " + gifName);
 	        return;
 	    }
-	    ImageIcon icon = new ImageIcon(gifURL);
+	    ImageIcon icon = new ImageIcon(gifURL);            //load the gif
 	    JLabel label = new JLabel(icon);
-	    final JPopupMenu popup = new JPopupMenu();
+	    
+	    final JPopupMenu popup = new JPopupMenu();   //make a popup that covers the mapView panel
 	    popup.setBorder(null);
 	    popup.add(label);
 	    popup.setFocusable(false);

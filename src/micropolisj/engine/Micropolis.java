@@ -901,48 +901,49 @@ public class Micropolis
 	public void ChangeSeason() {
 	    previousSeason = currentSeason;
 	    currentSeason = getCurrentSeason();
+	   //String gifName = null;
 
-	    String gifName = null;
-
-	    if (currentSeason == Season.SPRING && previousSeason == Season.WINTER) {
-	        sendMessage(MicropolisMessage.SEASON_SPRING);
-	        gifName = "SPRING.gif";
-	        isChangingToSpring(true);
+	    if (currentSeason == Season.SPRING && previousSeason == Season.WINTER) { //change from winter to spring
+	        sendMessage(MicropolisMessage.SEASON_SPRING);  //send message in the message panel
+	        //gifName = "SPRING.gif";
+	        isChangingToSpring(true);   //let MainWindow knows as well to play animation
 	    }
 	    else {
 	    	isChangingToSpring(false);
 	    }
-	    if (currentSeason == Season.SUMMER && previousSeason == Season.SPRING) {
+	    if (currentSeason == Season.SUMMER && previousSeason == Season.SPRING) {  //change from spring to summer
 	        sendMessage(MicropolisMessage.SEASON_SUMMER);
-	        gifName = "SUMMER.gif";
+	        //gifName = "SUMMER.gif";
 	        isChangingToSummer(true);
 	    } 
 	    else {
 	    	isChangingToSummer(false);
 	    }
-	    if (currentSeason == Season.FALL && previousSeason == Season.SUMMER) {
+	    if (currentSeason == Season.FALL && previousSeason == Season.SUMMER) {   //change from summer to fall
 	        sendMessage(MicropolisMessage.SEASON_FALL);
-	        gifName = "FALL.gif";
+	        //gifName = "FALL.gif";
 	        isChangingToFall(true);
 	    }
 	    else {
 	    	isChangingToFall(false);
 	    }
-	    if (currentSeason == Season.WINTER && previousSeason == Season.FALL) {
+	    if (currentSeason == Season.WINTER && previousSeason == Season.FALL) {  //change from fall to winter
 	        sendMessage(MicropolisMessage.SEASON_WINTER);
-	        gifName = "WINTER.gif";
+	        //gifName = "WINTER.gif";
 	        isChangingToWinter(true);
 	    } 
 	    else {
 	    	isChangingToWinter(false);
 	    }
-
 //	    if (gifName != null) {
 //	    	MainWindow mainWindow = new MainWindow();
 //	        mainWindow.displaySeasonChangeGif(gifName);
 //	    }
 	}
 
+	
+	
+	//functions to set variables and help the MainWindow knows when to play season change animation
 	private void isChangingToSpring(boolean spring) {
 		changingToSpring = spring;
 	}
@@ -957,60 +958,24 @@ public class Micropolis
 		changingToWinter = winter;
 	}
 	
+
+	
+	//another way of displaying animation, directly in the Micropolis class, but also ugly
+
 //	private void displaySeasonGif(String gifName) {
 //		ImageIcon icon = new ImageIcon(getClass().getResource("/" + gifName));
 //	    JLabel label = new JLabel(icon);
 //	    JOptionPane.showMessageDialog(null, label, "Season Change", JOptionPane.INFORMATION_MESSAGE);
 //	}
 	
+	
+	
 	public Season getCurrentSeason() {
-	    int month = (cityTime % 48) / 4;
-//	    boolean springMessageSent = false;
-//	    boolean summerMessageSent = false;
-//	    boolean fallMessageSent = false;
-//	    boolean winterMessageSent = false;
-//	    switch (month) {
-//	    case 3:
-//	    	if(!springMessageSent) {
-//	    		sendMessage(MicropolisMessage.SEASON_SPRING);
-//	    	}
-//		    springMessageSent = true;
-//		    summerMessageSent = false;
-//		    fallMessageSent = false;
-//		    winterMessageSent = false;
-//	    	break;
-//	    case 6:
-//	    	if(!summerMessageSent) {
-//	    		sendMessage(MicropolisMessage.SEASON_SUMMER);
-//	    	}
-//		    springMessageSent = false;
-//		    summerMessageSent = true;
-//		    fallMessageSent = false;
-//		    winterMessageSent = false;
-//	    	break;
-//	    case 9:
-//	    	if(!fallMessageSent) {
-//	    		sendMessage(MicropolisMessage.SEASON_FALL);
-//	    	}
-//		    springMessageSent = false;
-//		    summerMessageSent = false;
-//		    fallMessageSent = true;
-//		    winterMessageSent = false;
-//	    	break;
-//	    case 12:
-//	    	if(!winterMessageSent) {
-//	    		sendMessage(MicropolisMessage.SEASON_WINTER);
-//	    	}
-//		    springMessageSent = false;
-//		    summerMessageSent = false;
-//		    fallMessageSent = false;
-//		    winterMessageSent = true;
-//	    	break;
-//	    }
+	    int month = (cityTime % 48) / 4;  //get the month of the game
 	    for (Season season : Season.values()) {
 	        if (month == season.firstMonth || month == season.secondMonth || month == season.thirdMonth) {
 	            return season;
-	        }
+	        }                              //check what season it is right now
 	    }
 	    return Season.WINTER; 
 	}
@@ -1018,7 +983,7 @@ public class Micropolis
 
 	void doDisasters()
 	{
-		Season currentSeason = getCurrentSeason();
+		Season currentSeason = getCurrentSeason(); //return the season 
 		if (floodCnt > 0) {
 			floodCnt--;
 		}
@@ -1032,7 +997,7 @@ public class Micropolis
 
 		switch (currentSeason)
 		{
-		case SPRING:
+		case SPRING:            //change disaster rate when it's spring, increased the rate of fire happens
 			switch (PRNG.nextInt(9))
 			{
 			case 0:
@@ -1064,7 +1029,7 @@ public class Micropolis
 				break;
 			}
 			break;
-		case SUMMER:
+		case SUMMER:    //change disaster rate when it's summer, increased the rate of tornado happens
 			switch (PRNG.nextInt(9))
 			{
 			case 0:
@@ -1096,7 +1061,7 @@ public class Micropolis
 				break;
 			}
 			break;
-		case FALL:
+		case FALL:    //change disaster rate when it's fall, increased the rate of flood happens
 			switch (PRNG.nextInt(9))
 			{
 			case 0:
@@ -1128,7 +1093,7 @@ public class Micropolis
 				break;
 			}
 			break;
-		case WINTER:
+		case WINTER:      //change disaster rate when it's winter, increased the rate of earthquake happens
 			switch (PRNG.nextInt(9))
 			{
 			case 0:
