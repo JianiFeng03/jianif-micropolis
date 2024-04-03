@@ -58,6 +58,10 @@ public enum MicropolisMessage
 	FLOOD_REPORT,
 	MELTDOWN_REPORT,        // 43            doMeltdown
 	RIOTING_REPORT,
+	SEASON_SPRING,
+	SEASON_SUMMER,
+	SEASON_FALL,
+	SEASON_WINTER,
 
 	// added by Jason
 	NO_NUCLEAR_PLANTS;

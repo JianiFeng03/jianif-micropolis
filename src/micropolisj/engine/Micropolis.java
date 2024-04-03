@@ -18,6 +18,9 @@ import static micropolisj.engine.TileConstants.*;
  * The front-end should call animate() periodically
  * to move the simulation forward in time.
  */
+
+
+
 public class Micropolis
 {
 	static final Random DEFAULT_PRNG = new Random();
@@ -880,9 +883,63 @@ public class Micropolis
 
 		fireMapOverlayDataChanged(MapState.POLICE_OVERLAY);
 	}
+	
+	public Season getCurrentSeason() {
+	    int month = (cityTime % 48) / 4;
+	    boolean springMessageSent = false;
+	    boolean summerMessageSent = false;
+	    boolean fallMessageSent = false;
+	    boolean winterMessageSent = false;
+	    switch (month) {
+	    case 3:
+	    	if(!springMessageSent) {
+	    		sendMessage(MicropolisMessage.SEASON_SPRING);
+	    	}
+		    springMessageSent = true;
+		    summerMessageSent = false;
+		    fallMessageSent = false;
+		    winterMessageSent = false;
+	    	break;
+	    case 6:
+	    	if(!summerMessageSent) {
+	    		sendMessage(MicropolisMessage.SEASON_SUMMER);
+	    	}
+		    springMessageSent = false;
+		    summerMessageSent = true;
+		    fallMessageSent = false;
+		    winterMessageSent = false;
+	    	break;
+	    case 9:
+	    	if(!fallMessageSent) {
+	    		sendMessage(MicropolisMessage.SEASON_FALL);
+	    	}
+		    springMessageSent = false;
+		    summerMessageSent = false;
+		    fallMessageSent = true;
+		    winterMessageSent = false;
+	    	break;
+	    case 12:
+	    	if(!winterMessageSent) {
+	    		sendMessage(MicropolisMessage.SEASON_WINTER);
+	    	}
+		    springMessageSent = false;
+		    summerMessageSent = false;
+		    fallMessageSent = false;
+		    winterMessageSent = true;
+	    	break;
+	    }
+	    for (Season season : Season.values()) {
+	        if (month == season.firstMonth || month == season.secondMonth || month == season.thirdMonth) {
+	            return season;
+	        }
+	    }
+	    return Season.WINTER; 
+	}
+
 
 	void doDisasters()
 	{
+		Season currentSeason = getCurrentSeason();
 		if (floodCnt > 0) {
 			floodCnt--;
 		}
@@ -894,28 +951,134 @@ public class Micropolis
 		if (PRNG.nextInt(DisChance[gameLevel]+1) != 0)
 			return;
 
-		switch (PRNG.nextInt(9))
+		switch (currentSeason)
 		{
-		case 0:
-		case 1:
-			setFire();
+		case SPRING:
+			switch (PRNG.nextInt(9))
+			{
+			case 0:
+			case 1:
+				setFire();
+				break;
+			case 2:
+				setFire();
+				break;
+			case 3:
+				makeFlood();
+				break;
+			case 4:
+				setFire();
+				break;
+			case 5:
+				makeTornado();
+				break;
+			case 6:
+				makeEarthquake();
+				break;
+			case 7:
+				setFire();
+				break;
+			case 8:
+				if (pollutionAverage > 60) {
+					makeMonster();
+				}
+				break;
+			}
 			break;
-		case 2:
-		case 3:
-			makeFlood();
+		case SUMMER:
+			switch (PRNG.nextInt(9))
+			{
+			case 0:
+			case 1:
+				setFire();
+				break;
+			case 2:
+				makeTornado();
+				break;
+			case 3:
+				makeFlood();
+				break;
+			case 4:
+				makeTornado();
+				break;
+			case 5:
+				makeTornado();
+				break;
+			case 6:
+				makeEarthquake();
+				break;
+			case 7:
+				makeTornado();
+				break;
+			case 8:
+				if (pollutionAverage > 60) {
+					makeMonster();
+				}
+				break;
+			}
 			break;
-		case 4:
+		case FALL:
+			switch (PRNG.nextInt(9))
+			{
+			case 0:
+			case 1:
+				setFire();
+				break;
+			case 2:
+				makeFlood();
+				break;
+			case 3:
+				makeFlood();
+				break;
+			case 4:
+				makeFlood();
+				break;
+			case 5:
+				makeTornado();
+				break;
+			case 6:
+				makeEarthquake();
+				break;
+			case 7:
+				makeFlood();
+				break;
+			case 8:
+				if (pollutionAverage > 60) {
+					makeMonster();
+				}
+				break;
+			}
 			break;
-		case 5:
-			makeTornado();
-			break;
-		case 6:
-			makeEarthquake();
-			break;
-		case 7:
-		case 8:
-			if (pollutionAverage > 60) {
-				makeMonster();
+		case WINTER:
+			switch (PRNG.nextInt(9))
+			{
+			case 0:
+			case 1:
+				setFire();
+				break;
+			case 2:
+				makeEarthquake();
+				break;
+			case 3:
+				makeFlood();
+				break;
+			case 4:
+				makeEarthquake();
+				break;
+			case 5:
+				makeTornado();
+				break;
+			case 6:
+				makeEarthquake();
+				break;
+			case 7:
+				makeEarthquake();
+				break;
+			case 8:
+				if (pollutionAverage > 60) {
+					makeMonster();
+				}
+				break;
 			}
 			break;
 		}
