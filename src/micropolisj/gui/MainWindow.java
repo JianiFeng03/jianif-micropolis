@@ -51,6 +51,10 @@ public class MainWindow extends JFrame
 	boolean dirty2 = false;  //indicates if simulator took a step since last save
 	long lastSavedTime = 0;  //real-time clock of when file was last saved
 	boolean autoBudgetPending;
+    boolean springPlayed = false;
+    boolean summerPlayed = false;
+    boolean fallPlayed = false;
+    boolean winterPlayed = false;
 
 	static ImageIcon appIcon;
 	static {
@@ -1334,7 +1338,7 @@ public class MainWindow extends JFrame
 	private void updateDateLabel()
 	{
 		dateLbl.setText(formatGameDate(engine.cityTime));
-
+		displaySeasonChangeGif();
 		NumberFormat nf = NumberFormat.getInstance();
 		popLbl.setText(nf.format(getEngine().getCityPopulation()));
 	}
@@ -1729,4 +1733,48 @@ public class MainWindow extends JFrame
 			JOptionPane.PLAIN_MESSAGE,
 			appIcon);
 	}
+	
+	public void displaySeasonChangeGif() {
+	    String gifName = null;
+
+	    if (engine.changingToSpring && springPlayed == false) {
+	        gifName = "SPRING.gif";
+	        springPlayed = true;
+	        winterPlayed = false;
+	    }
+	    if (engine.changingToSummer && summerPlayed == false) {
+	        gifName = "SUMMER.gif";
+	        summerPlayed = true;
+	        springPlayed = false;
+	    }
+	    if (engine.changingToFall && fallPlayed == false) {
+	        gifName = "FALL.gif";
+	        fallPlayed = true;
+	        summerPlayed = false;
+	    }
+	    if (engine.changingToWinter && winterPlayed == false) {
+	        gifName = "WINTER.gif";
+	        winterPlayed = true;
+	        fallPlayed = false;
+	    }
+	    URL gifURL = getClass().getResource("/" + gifName);
+	    
+	    if (gifURL == null) {
+	        System.err.println("Could not find GIF: " + gifName);
+	        return;
+	    }
+	    ImageIcon icon = new ImageIcon(gifURL);
+	    JLabel label = new JLabel(icon);
+	    final JPopupMenu popup = new JPopupMenu();
+	    popup.setBorder(null);
+	    popup.add(label);
+	    popup.setFocusable(false);
+	    popup.show(mapView, (mapView.getWidth() - icon.getIconWidth()) / 4, 
+	                       (mapView.getHeight() - icon.getIconHeight()) / 4);
+
+	    Timer timer = new Timer(500, e -> popup.setVisible(false));
+	    timer.setRepeats(false);
+	    timer.start();
+	}
+
 }

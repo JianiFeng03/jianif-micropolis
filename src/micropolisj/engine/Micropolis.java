@@ -15,6 +15,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
+import micropolisj.gui.MainWindow;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
@@ -208,6 +210,10 @@ public class Micropolis
 	
 	Season currentSeason = Season.WINTER;
 	Season previousSeason = Season.WINTER;
+	public boolean changingToSpring = false;
+	public boolean changingToSummer = false;
+	public boolean changingToFall = false;
+	public boolean changingToWinter = false;
 
 	public void spend(int amount)
 	{
@@ -901,31 +907,61 @@ public class Micropolis
 	    if (currentSeason == Season.SPRING && previousSeason == Season.WINTER) {
 	        sendMessage(MicropolisMessage.SEASON_SPRING);
 	        gifName = "SPRING.gif";
+	        isChangingToSpring(true);
+	    }
+	    else {
+	    	isChangingToSpring(false);
 	    }
 	    if (currentSeason == Season.SUMMER && previousSeason == Season.SPRING) {
 	        sendMessage(MicropolisMessage.SEASON_SUMMER);
 	        gifName = "SUMMER.gif";
+	        isChangingToSummer(true);
+	    } 
+	    else {
+	    	isChangingToSummer(false);
 	    }
 	    if (currentSeason == Season.FALL && previousSeason == Season.SUMMER) {
 	        sendMessage(MicropolisMessage.SEASON_FALL);
 	        gifName = "FALL.gif";
+	        isChangingToFall(true);
+	    }
+	    else {
+	    	isChangingToFall(false);
 	    }
 	    if (currentSeason == Season.WINTER && previousSeason == Season.FALL) {
 	        sendMessage(MicropolisMessage.SEASON_WINTER);
 	        gifName = "WINTER.gif";
+	        isChangingToWinter(true);
+	    } 
+	    else {
+	    	isChangingToWinter(false);
 	    }
 
-	    if (gifName != null) {
-	        displaySeasonGif(gifName);
-	    }
+//	    if (gifName != null) {
+//	    	MainWindow mainWindow = new MainWindow();
+//	        mainWindow.displaySeasonChangeGif(gifName);
+//	    }
 	}
 
-	private void displaySeasonGif(String gifName) {
-		ImageIcon icon = new ImageIcon(getClass().getResource("C:\\Users\\pikut\\jianif-workspace\\jianif-micropolis\\resources" + gifName));
-	    JLabel label = new JLabel(icon);
-	    JOptionPane.showMessageDialog(null, label, "Season Change", JOptionPane.INFORMATION_MESSAGE);
+	private void isChangingToSpring(boolean spring) {
+		changingToSpring = spring;
 	}
-
+	
+	private void isChangingToSummer(boolean summer) {
+		changingToSummer =  summer;
+	}
+	private void isChangingToFall(boolean fall) {
+		changingToFall = fall;
+	}
+	private void isChangingToWinter(boolean winter) {
+		changingToWinter = winter;
+	}
+	
+//	private void displaySeasonGif(String gifName) {
+//		ImageIcon icon = new ImageIcon(getClass().getResource("/" + gifName));
+//	    JLabel label = new JLabel(icon);
+//	    JOptionPane.showMessageDialog(null, label, "Season Change", JOptionPane.INFORMATION_MESSAGE);
+//	}
 	
 	public Season getCurrentSeason() {
 	    int month = (cityTime % 48) / 4;
