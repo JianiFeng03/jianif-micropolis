@@ -11,6 +11,10 @@ package micropolisj.engine;
 import java.io.*;
 import java.util.*;
 
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import static micropolisj.engine.TileConstants.*;
 
 /**
@@ -201,6 +205,9 @@ public class Micropolis
 	static final int VALVERATE = 2;
 	public static final int CENSUSRATE = 4;
 	static final int TAXFREQ = 48;
+	
+	Season currentSeason = Season.WINTER;
+	Season previousSeason = Season.WINTER;
 
 	public void spend(int amount)
 	{
@@ -564,6 +571,7 @@ public class Micropolis
 				setValves();
 			}
 			clearCensus();
+			ChangeSeason();
 			break;
 
 		case 1:
@@ -884,50 +892,85 @@ public class Micropolis
 		fireMapOverlayDataChanged(MapState.POLICE_OVERLAY);
 	}
 	
+	public void ChangeSeason() {
+	    previousSeason = currentSeason;
+	    currentSeason = getCurrentSeason();
+
+	    String gifName = null;
+
+	    if (currentSeason == Season.SPRING && previousSeason == Season.WINTER) {
+	        sendMessage(MicropolisMessage.SEASON_SPRING);
+	        gifName = "SPRING.gif";
+	    }
+	    if (currentSeason == Season.SUMMER && previousSeason == Season.SPRING) {
+	        sendMessage(MicropolisMessage.SEASON_SUMMER);
+	        gifName = "SUMMER.gif";
+	    }
+	    if (currentSeason == Season.FALL && previousSeason == Season.SUMMER) {
+	        sendMessage(MicropolisMessage.SEASON_FALL);
+	        gifName = "FALL.gif";
+	    }
+	    if (currentSeason == Season.WINTER && previousSeason == Season.FALL) {
+	        sendMessage(MicropolisMessage.SEASON_WINTER);
+	        gifName = "WINTER.gif";
+	    }
+
+	    if (gifName != null) {
+	        displaySeasonGif(gifName);
+	    }
+	}
+
+	private void displaySeasonGif(String gifName) {
+		ImageIcon icon = new ImageIcon(getClass().getResource("C:\\Users\\pikut\\jianif-workspace\\jianif-micropolis\\resources" + gifName));
+	    JLabel label = new JLabel(icon);
+	    JOptionPane.showMessageDialog(null, label, "Season Change", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+	
 	public Season getCurrentSeason() {
 	    int month = (cityTime % 48) / 4;
-	    boolean springMessageSent = false;
-	    boolean summerMessageSent = false;
-	    boolean fallMessageSent = false;
-	    boolean winterMessageSent = false;
-	    switch (month) {
-	    case 3:
-	    	if(!springMessageSent) {
-	    		sendMessage(MicropolisMessage.SEASON_SPRING);
-	    	}
-		    springMessageSent = true;
-		    summerMessageSent = false;
-		    fallMessageSent = false;
-		    winterMessageSent = false;
-	    	break;
-	    case 6:
-	    	if(!summerMessageSent) {
-	    		sendMessage(MicropolisMessage.SEASON_SUMMER);
-	    	}
-		    springMessageSent = false;
-		    summerMessageSent = true;
-		    fallMessageSent = false;
-		    winterMessageSent = false;
-	    	break;
-	    case 9:
-	    	if(!fallMessageSent) {
-	    		sendMessage(MicropolisMessage.SEASON_FALL);
-	    	}
-		    springMessageSent = false;
-		    summerMessageSent = false;
-		    fallMessageSent = true;
-		    winterMessageSent = false;
-	    	break;
-	    case 12:
-	    	if(!winterMessageSent) {
-	    		sendMessage(MicropolisMessage.SEASON_WINTER);
-	    	}
-		    springMessageSent = false;
-		    summerMessageSent = false;
-		    fallMessageSent = false;
-		    winterMessageSent = true;
-	    	break;
-	    }
+//	    boolean springMessageSent = false;
+//	    boolean summerMessageSent = false;
+//	    boolean fallMessageSent = false;
+//	    boolean winterMessageSent = false;
+//	    switch (month) {
+//	    case 3:
+//	    	if(!springMessageSent) {
+//	    		sendMessage(MicropolisMessage.SEASON_SPRING);
+//	    	}
+//		    springMessageSent = true;
+//		    summerMessageSent = false;
+//		    fallMessageSent = false;
+//		    winterMessageSent = false;
+//	    	break;
+//	    case 6:
+//	    	if(!summerMessageSent) {
+//	    		sendMessage(MicropolisMessage.SEASON_SUMMER);
+//	    	}
+//		    springMessageSent = false;
+//		    summerMessageSent = true;
+//		    fallMessageSent = false;
+//		    winterMessageSent = false;
+//	    	break;
+//	    case 9:
+//	    	if(!fallMessageSent) {
+//	    		sendMessage(MicropolisMessage.SEASON_FALL);
+//	    	}
+//		    springMessageSent = false;
+//		    summerMessageSent = false;
+//		    fallMessageSent = true;
+//		    winterMessageSent = false;
+//	    	break;
+//	    case 12:
+//	    	if(!winterMessageSent) {
+//	    		sendMessage(MicropolisMessage.SEASON_WINTER);
+//	    	}
+//		    springMessageSent = false;
+//		    summerMessageSent = false;
+//		    fallMessageSent = false;
+//		    winterMessageSent = true;
+//	    	break;
+//	    }
 	    for (Season season : Season.values()) {
 	        if (month == season.firstMonth || month == season.secondMonth || month == season.thirdMonth) {
 	            return season;
